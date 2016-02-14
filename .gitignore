@@ -55,3 +55,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Custom
+config.py
+venv/
+.ipynb_checkpoints/
+*.ipynb
