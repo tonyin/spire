@@ -13,20 +13,35 @@ def main():
     print '[INFO] Getting raw spire data...'
     date = (datetime.today()-timedelta(days=DAYS_AGO)).strftime('%Y-%m-%d')
     breaths = get_spire(spire['breath'], date)
-    print '[INFO] Uploading raw spire data...'
-    client = KeenClient(
-        project_id = keen['project_id'],
-        read_key = keen['read_key'],
-        write_key = keen['write_key']
+    steps = get_spire(spire['step'], date)
+    
+    print '[INFO] Uploading breath data...'
+    breath_client = KeenClient(
+        project_id = keen['breath']['project_id'],
+        read_key = keen['breath']['read_key'],
+        write_key = keen['breath']['write_key']
     )
-    data = {}
-    data['breaths'] = [{'timestamp': b['timestamp'], 'value':b['value']} for b in breaths['data']]
-    data['metadata'] = breaths['metadata']
-    data['metadata']['min'] = min([b['value'] for b in breaths['data']])
-    data['metadata']['max'] = max([b['value'] for b in breaths['data']])
-    data['id'] = USER + date
-    client.add_event('sessions', data)
-    print '[INFO] Uploaded raw spire data for ' + date
+    keen_breaths = {}
+    keen_breaths['breaths'] = [{'timestamp': b['timestamp'], 'value':b['value']} for b in breaths['data']]
+    keen_breaths['metadata'] = breaths['metadata']
+    keen_breaths['metadata']['min'] = min([b['value'] for b in breaths['data']])
+    keen_breaths['metadata']['max'] = max([b['value'] for b in breaths['data']])
+    keen_breaths['id'] = USER + date
+    client.add_event('sessions', keen_breaths)
+
+    print '[INFO] Uploading step data...'
+    breath_client = KeenClient(
+        project_id = keen['steps']['project_id'],
+        read_key = keen['steps']['read_key'],
+        write_key = keen['steps']['write_key']
+    )
+    keen_steps = {}
+    keen_steps['steps'] = [{'timestamp': s['timestamp'], 'value':s['value']} for s in steps['data']]
+    keen_steps['metadata'] = steps['metadata']
+    keen_steps['id'] = USER + date
+    client.add_event('sessions', keen_steps)
+
+    print '[INFO] Uploaded spire data for ' + date
 
 def get_spire(what, date):
     url = spire['url'] + what + date
