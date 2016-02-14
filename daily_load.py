@@ -7,6 +7,7 @@ from keen.client import KeenClient
 from config import spire, keen
 
 DAYS_AGO = 2
+USER = 'tyin'
 
 def main():
     print '[INFO] Getting raw spire data...'
@@ -23,8 +24,9 @@ def main():
     data['metadata'] = breaths['metadata']
     data['metadata']['min'] = min([b['value'] for b in breaths['data']])
     data['metadata']['max'] = max([b['value'] for b in breaths['data']])
-    client.add_event('sessions': data)
-    print '[INFO] Uploaded raw spire data for ' + str(timestamp)
+    data['id'] = USER + date
+    client.add_event('sessions', data)
+    print '[INFO] Uploaded raw spire data for ' + date
 
 def get_spire(what, date):
     url = spire['url'] + what + date
