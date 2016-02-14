@@ -27,10 +27,10 @@ def main():
     keen_breaths['metadata']['min'] = min([b['value'] for b in breaths['data']])
     keen_breaths['metadata']['max'] = max([b['value'] for b in breaths['data']])
     keen_breaths['id'] = USER + date
-    client.add_event('sessions', keen_breaths)
+    breath_client.add_event('sessions', keen_breaths)
 
     print '[INFO] Uploading step data...'
-    breath_client = KeenClient(
+    steps_client = KeenClient(
         project_id = keen['steps']['project_id'],
         read_key = keen['steps']['read_key'],
         write_key = keen['steps']['write_key']
@@ -39,7 +39,7 @@ def main():
     keen_steps['steps'] = [{'timestamp': s['timestamp'], 'value':s['value']} for s in steps['data']]
     keen_steps['metadata'] = steps['metadata']
     keen_steps['id'] = USER + date
-    client.add_event('sessions', keen_steps)
+    steps_client.add_event('sessions', keen_steps)
 
     print '[INFO] Uploaded spire data for ' + date
 
